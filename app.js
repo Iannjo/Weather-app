@@ -119,6 +119,6 @@ app.post("/", function(req, res) {
   });
 
 
-app.listen(process.env.PORT || port, function() {
+app.listen(process.env.PORT || 3000, function() {
   console.info("Sever runing on port: " + process.env.PORT || port);
 });
