@@ -1,0 +1,28 @@
+body{
+    
+    background-color: rgb(220, 220, 230);
+}
+.main{
+    width: 600px;
+    margin:auto;
+}
+form.blocktext {
+    text-align: center;
+    margin-top: 25px;
+}
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+.button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
