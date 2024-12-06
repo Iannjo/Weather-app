@@ -46,16 +46,17 @@ app.get("/images",function(req,res){
 
 app.post("/", function(req, res) {
  
-  console.log(req.body.cityName);
+  //console.log(req.body.cityName);
 
   const query = req.body.cityName;
   const apiKey = process.env.API_KEY;
   const units = "metric";
-  const endPoint = "https://api.openweathermap.org/data/2.5/weather?q=";
+  const endPoint = "https://api.openweathermap.org/data/2.5/weather?"; //api.openweathermap.org/geo/1.0/direct?q
+  
   
   
 
-  const url = endPoint + query + "&appid=" + apiKey + "&units=" + units;
+  const url = endPoint + "&q=" + query + "&appid=" + apiKey + "&units=" + units;
 
   //Using the express https method to access external html
   // https.get(url, function(response) {
@@ -90,24 +91,47 @@ app.post("/", function(req, res) {
 
   axios.get(url)
     .then(response => {
+      console.log(response.data);
       console.log(response.data.weather);
+            
       const feels_like = response.data.main.feels_like;
       const temp = response.data.main.temp;
+      const sea_level =response.data.main.sea_level;
       const place = response.data.name;
       const description = response.data.weather[0].description;
+      const country = response.data.sys.country;
       const icon = response.data.weather[0].icon;
       const imageUrl = "http://openweathermap.org/img/wn/" + icon + "@4x.png";
 
-      res.write("<h1>The current temparature in <span>" + place + "</span> is " + temp + " degrees celicus</h1>");
+      res.write("<h1>The current temparature in <span>" + place + "</span> (" + country +") is " + temp + " degrees celicus</h1>");
       res.write("<h2>feels like: " + feels_like + "</h2>");
       res.write("<p>The weather is currently " + description + "</p>");
+      res.write("<p>Current sea level: " + sea_level +" </p>");
       res.write("<img src=" + imageUrl + ">");
       res.write("<a href=/>Home</a>")
       res.send();
     })
-    .catch(error => {
-      console.log(error.response.statusText);
-      res.write("<h1>" + error.response.statusText +"</h1>")
+    // .catch(error => {
+    //   console.log(error.response.status);
+    //   res.write("<h1>" + error.response.status +"</h1>")
+    // })
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+      console.log(error.config);
     })
     //Always gets executed with or without errors h
     .then(function(){
@@ -120,5 +144,5 @@ app.post("/", function(req, res) {
 
 
 app.listen(process.env.PORT || 3000, function() {
-  console.info("Sever runing on port: " + process.env.PORT || port);
+  console.info("Sever is up and runing on port: " + process.env.PORT || port);
 });
